@@ -61,4 +61,61 @@
 	  $(this).html($(this).html() == 'View more' ? 'View less' : 'View more');
 	  e.preventDefault();
     });
+
+    function detectOSFromUserAgent() {
+      return new Promise((resolve) => {
+        const userAgent = window.navigator.userAgent;
+
+        if (userAgent.includes("Win")) resolve("Windows");
+        else if (userAgent.includes("Mac")) resolve("macOS");
+        else if (userAgent.includes("Linux")) resolve("Linux");
+        else if (userAgent.includes("Android")) resolve("Android");
+        else if (userAgent.includes("like Mac") && /iPhone|iPad|iPod/.test(userAgent)) resolve("iOS");
+        else resolve("Unknown OS");
+      });
+    }
+
+    $(document).ready(function() {
+      // Detect the user's OS and update the download button text
+      (async () => {
+          const os = await detectOSFromUserAgent();
+          const button = $(".grass-os-download-button");
+       
+          // Add text and data based on the user's OS
+          switch (os) {
+              case "Windows":
+                  button.text("Download for Windows");
+                  button.data("os", "windows");
+                  // TODO: This doesn't work
+                  // $('a[data-toggle="tab"]').on("shown.bs.tab", (e) => {
+                  //   history.replaceState(null, null, "#windows");
+                  //   window.location.hash = "#windows";
+                  // });
+                  if (window.location.pathname === "/learn/download/") {
+                    history.replaceState(null, null, "#windows");
+                  }
+                  break;
+              case "macOS":
+                  button.text("Download for macOS");
+                  button.data("os", "mac");
+                  $('#downloadTab a[href="#mac"]').tab('show');
+                  if (window.location.pathname === "/learn/download/") {
+                    history.replaceState(null, null, "#mac");
+                  }
+                  break;
+              case "Linux":
+                  button.text("Download for Linux");
+                  button.data("os", "linux");
+                  if (window.location.pathname === "/learn/download/") {
+                    history.replaceState(null, null, "#linux");
+                  }
+                  break;
+              default:
+                  button.text("Download");
+                  button.data("os", "unknown");
+                  break;
+          }
+      })(jQuery);
+  });
+  
 })(jQuery);
