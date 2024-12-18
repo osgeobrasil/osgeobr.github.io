@@ -1,4 +1,4 @@
-baseURL = "https://osgeobr.github.io"
+baseURL = "https://osgeobrasil.github.io"
 theme = "grass"
 enableInlineShortcodes = true
 
